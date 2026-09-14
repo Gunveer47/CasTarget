@@ -7,9 +7,27 @@ st.set_page_config(page_title="CasTarget: CRISPR Guide Finder", page_icon="🧬"
 st.title("🧬 CasTarget: CRISPR Guide RNA Finder")
 st.write("Scan DNA sequences for SpCas9 targets, validate NGG PAM sites, and filter optimal spacers.")
 
-dna_input = st.text_area("Paste your target DNA sequence here:", 
-                         "ATGGCCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCCGGATAGCTAGCTAGCTAG")
-
+if st.button("Run CRISPR Analysis"):
+    if not dna_input.strip():
+        st.warning("Please enter a DNA sequence first.")
+    elif len(dna_input.strip()) < 23:
+        st.error("Sequence is too short! Please enter at least 23 bases.")
+    else:
+        guides = find_crispr_guides(dna_input)
+        if len(guides) > 0:
+            st.success(f"Successfully found {len(guides)} optimal guide targets!")
+            df = pd.DataFrame(guides)
+            st.dataframe(df, use_container_width=True)
+            
+            csv_data = df.to_csv(index=False).encode('utf-8')
+            st.download_button(
+                label="📥 Download Results as CSV",
+                data=csv_data,
+                file_name="cas_target_results.csv",
+                mime="text/csv",
+            )
+        else:
+            st.warning("No valid guides found matching the NGG and GC content criteria.")
 def find_crispr_guides(dna_sequence):
     seq = Seq(dna_sequence.strip().upper())
     strands = {"Forward": seq, "Reverse": seq.reverse_complement()}

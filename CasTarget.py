@@ -1,36 +1,6 @@
+import streamlit as st
 from Bio.Seq import Seq
-import csv
 import pandas as pd
-def find_crispr_guides(dna_sequence):
-    """
-    Scans a DNA sequence for SpCas9 target sites (N20 + NGG)
-    on both forward and reverse strands.
-    """
-    seq = Seq(dna_sequence)
-    results = []
-    
-    strands = {"Forward": seq, "Reverse": seq.reverse_complement()}
-    
-    for strand_name, s in strands.items():
-        for i in range(len(s) - 3):
-            pam = s[i+20:i+23]
-            if pam.endswith("GG") and len(pam) == 3:
-                spacer = s[i:i+20]
-                
-                gc_content = (spacer.count("G") + spacer.count("C")) / len(spacer) * 100
-                
-                if 40 <= gc_content <= 60:
-                    results.append({
-                        "Strand": strand_name,
-                        "Position": i,
-                        "Spacer": str(spacer),
-                        "PAM": str(pam),
-                        "GC_Content": round(gc_content, 2)
-                    })
-                    
-    return results
-
-
 
 st.set_page_config(page_title="CasTarget: CRISPR Guide Finder", page_icon="🧬", layout="centered")
 

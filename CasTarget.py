@@ -1,5 +1,6 @@
 from Bio.Seq import Seq
 import csv
+import pandas as pd
 def find_crispr_guides(dna_sequence):
     """
     Scans a DNA sequence for SpCas9 target sites (N20 + NGG)

@@ -30,23 +30,7 @@ def find_crispr_guides(dna_sequence):
                     
     return results
 
-#test_gene = "ATGGCCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCCGGATAGCTAGCTAGCTAG"
-#guides = find_crispr_guides(test_gene)
-print("--- Welcome to CasTarget: CRISPR Guide RNA Finder ---")
-user_sequence = input("Enter or paste your DNA sequence: ").strip().upper()
 
-guides = find_crispr_guides(user_sequence)
-for g in guides:
-    print(f"Found on {g['Strand']} strand at pos {g['Position']}: Spacer = {g['Spacer']}, PAM = {g['PAM']}, GC% = {g['GC_Content']}")
-csv_filename = "crispr_results.csv"
-keys = ["Strand", "Position", "Spacer", "PAM", "GC_Content"]
-
-with open(csv_filename, mode="w", newline="") as output_file:
-    dict_writer = csv.DictWriter(output_file, fieldnames=keys)
-    dict_writer.writeheader()
-    dict_writer.writerows(guides)
-
-print(f"\nSuccessfully saved {len(guides)} guide targets to {csv_filename}!")
 
 st.set_page_config(page_title="CasTarget: CRISPR Guide Finder", page_icon="🧬", layout="centered")
 
